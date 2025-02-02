@@ -1,0 +1,48 @@
+<!-- project_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Projects - ProjectHub{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Projects</h1>
+        <a href="{% url 'project_create' %}" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors">
+            <i class="fas fa-plus mr-2"></i>New Project
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for project in projects %}
+        <div class="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
+            <div class="flex justify-between items-start mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">{{ project.name }}</h2>
+                <div class="flex space-x-2">
+                    <a href="{% url 'project_update' project.pk %}" class="text-indigo-600 hover:text-indigo-800">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'project_delete' project.pk %}" class="text-red-600 hover:text-red-800">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+            <p class="text-gray-600 mb-4">{{ project.description|truncatewords:30 }}</p>
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">
+                    <i class="fas fa-calendar mr-1"></i>
+                    {{ project.created_at|date:"M d, Y" }}
+                </span>
+                <a href="{% url 'project_detail' project.pk %}" class="text-indigo-600 hover:text-indigo-800 font-medium">
+                    View Details <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-3 text-center py-8">
+            <i class="fas fa-folder-open text-gray-400 text-4xl mb-4"></i>
+            <p class="text-gray-500">No projects found. Create your first project to get started!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+<!-- project_form.html -->
+{% extends 'base.html' %}
+
+{% block title %}{% if form.instance.pk %}Edit Project{% else %}New Project{% endif %} - ProjectHub{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">
+        {% if form.instance.pk %}Edit Project{% else %}Create New Project{% endif %}
+    </h1>
+
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+
+        {% for field in form %}
+        <div class="space-y-2">
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                {{ field.label }}
+            </label>
+            {% if field.field.widget.input_type == 'text' or field.field.widget.input_type == 'date' %}
+    <input type="{{ field.field.widget.input_type }}"
+           name="{{ field.name }}"
+           id="{{ field.id_for_label }}"
+           value="{{ field.value|default:'' }}"
+           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+{% elif field.field.widget.input_type == 'textarea' or field.name == 'description' %}
+    <textarea name="{{ field.name }}"
+              id="{{ field.id_for_label }}"
+              rows="4"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ field.value|default:'' }}</textarea>
+            {% elif field.field.widget.input_type == 'select' %}
+                <select name="{{ field.name }}"
+                        id="{{ field.id_for_label }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    {% for choice in field.field.choices %}
+                        <option value="{{ choice.0 }}" {% if field.value == choice.0 %}selected{% endif %}>
+                            {{ choice.1 }}
+                        </option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <p class="text-red-600 text-sm">{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+
+            {% if field.help_text %}
+                <p class="text-gray-500 text-sm">{{ field.help_text }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <div class="flex justify-end space-x-3 pt-4">
+            <a href="{% url 'project_list' %}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors">
+                Cancel
+            </a>
+            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors">
+                {% if form.instance.pk %}Save Changes{% else %}Create Project{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

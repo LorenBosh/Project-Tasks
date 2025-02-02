@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: projecttasks
+  namespace: projecttasks
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: projecttasks
+  template:
+    metadata:
+      labels:
+        app: projecttasks
+    spec:
+      containers:
+        - name: projecttasks
+          image: lorenbosh/project-tasks:latest
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+          ports:
+            - containerPort: 8050
+          env:
+            - name: DATABASE_URL
+              value: "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_URL):5432/$(POSTGRES_DB)"
+          envFrom:
+            - configMapRef:
+                name: projecttasks-config
+            - secretRef:
+                name: projecttasks-secret

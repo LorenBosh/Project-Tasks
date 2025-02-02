@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: projecttasks
+data:
+  POSTGRES_DB: ProjectTasks
