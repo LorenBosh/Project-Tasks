@@ -22,24 +22,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tests with coverage
-        run: |
-          pytest --cov=./ --cov-report=xml --cov-report=term-missing
-
-      - name: Generate Coverage Badge
-        run: |
-          coverage=$(pytest --cov=./ | grep -oP 'TOTAL\s+\d+\s+\d+\s+\K\d+')
-          echo "![Coverage](https://img.shields.io/badge/Coverage-${coverage}%25-brightgreen)" > coverage-badge.md
-          cat coverage-badge.md >> README.md
-
-      - name: Commit Coverage Badge
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-          git add README.md
-          git commit -m "Updated coverage badge [skip ci]" || echo "No changes to commit"
-          git push origin main || echo "No changes to push"
-
       - name: Build Docker image
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USER }}/myapp:latest .
