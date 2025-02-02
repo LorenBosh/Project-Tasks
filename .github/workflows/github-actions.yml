@@ -6,7 +6,7 @@ on:
       - main
       - master
 jobs:
-  build-and-test:
+  build-and-notify:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
